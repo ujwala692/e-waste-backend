@@ -1,14 +1,18 @@
-FROM python:3.11-slim
+FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-COPY . .
+COPY pom.xml .
+COPY src ./src
 
-# Install dependencies only if requirements.txt exists
-RUN if [ -f requirements.txt ]; then \
-        pip install --no-cache-dir -r requirements.txt; \
-    fi
+RUN mvn clean package -DskipTests
 
-EXPOSE 5000
+FROM eclipse-temurin:21-jre
 
-CMD ["python", "app.py"]
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "app.jar"]
