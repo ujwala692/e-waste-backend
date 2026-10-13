@@ -28,7 +28,9 @@ record LoginOutput(String token, Map<String,Object> user) {}
 @Configuration class AppConfig {
     @Bean PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder(); }
     @Bean org.springframework.web.servlet.config.annotation.WebMvcConfigurer cors(@Value("${app.cors.origins}") String origins){
-        String[] allowedOrigins=Arrays.stream(origins.split(",")).map(String::trim).filter(s->!s.isEmpty()).toArray(String[]::new);
+        String[] configuredOrigins=Arrays.stream(origins.split(",")).map(String::trim).filter(s->!s.isEmpty()).toArray(String[]::new);
+        String[] allowedOrigins=Arrays.copyOf(configuredOrigins,configuredOrigins.length+1);
+        allowedOrigins[configuredOrigins.length]="https://e-waste-frontend-self.vercel.app";
         return new org.springframework.web.servlet.config.annotation.WebMvcConfigurer(){
             @Override public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry r){r.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("GET","POST","PUT","DELETE","OPTIONS").allowedHeaders("*");}
         };
