@@ -32,7 +32,7 @@ class EWaste {
     public String brand;
     @Column(nullable=false) public Integer quantity;
     @Column(nullable=false) public Double weight;
-    @Column(nullable=false) public String condition;
+    @Column(name="item_condition",nullable=false) public String condition;
     @Column(length=1200) public String description;
     @Column(nullable=false) public String pickupAddress;
     @Column(nullable=false) public String status="AVAILABLE";

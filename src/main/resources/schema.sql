@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS ewaste (
   brand VARCHAR(255),
   quantity INT NOT NULL,
   weight DOUBLE NOT NULL,
-  `condition` VARCHAR(255) NOT NULL,
+  item_condition VARCHAR(255) NOT NULL,
   description VARCHAR(1200),
   pickup_address VARCHAR(255) NOT NULL,
   status VARCHAR(32) NOT NULL,

@@ -27,11 +27,16 @@ record LoginOutput(String token, Map<String,Object> user) {}
 
 @Configuration class AppConfig {
     @Bean PasswordEncoder passwordEncoder(){ return new BCryptPasswordEncoder(); }
-    @Bean org.springframework.web.servlet.config.annotation.WebMvcConfigurer cors(@Value("${app.cors.origin}") String origin){
+    @Bean org.springframework.web.servlet.config.annotation.WebMvcConfigurer cors(@Value("${app.cors.origins}") String origins){
+        String[] allowedOrigins=Arrays.stream(origins.split(",")).map(String::trim).filter(s->!s.isEmpty()).toArray(String[]::new);
         return new org.springframework.web.servlet.config.annotation.WebMvcConfigurer(){
-            @Override public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry r){r.addMapping("/**").allowedOrigins(origin).allowedMethods("GET","POST","PUT","DELETE","OPTIONS").allowedHeaders("*");}
+            @Override public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry r){r.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("GET","POST","PUT","DELETE","OPTIONS").allowedHeaders("*");}
         };
     }
+}
+
+@RestController class HealthController {
+    @GetMapping("/") Map<String,String> health(){return Map.of("status","ok","service","recircle-api");}
 }
 
 @RestControllerAdvice class Errors {
