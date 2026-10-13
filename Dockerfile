@@ -1,17 +1,14 @@
-# Use the official Python base image
 FROM python:3.11-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy project files
 COPY . .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies only if requirements.txt exists
+RUN if [ -f requirements.txt ]; then \
+        pip install --no-cache-dir -r requirements.txt; \
+    fi
 
-# Expose application port
 EXPOSE 5000
 
-# Run the application
 CMD ["python", "app.py"]
